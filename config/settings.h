@@ -1,0 +1,14 @@
+#pragma once
+
+#define FIRMWARE_VERSION "1.0.0"
+#define CONTROLLER_TYPE "realtime_sensor"
+
+#define WIFI_CONNECT_TIMEOUT_MS 15000
+#define SENSOR_PUBLISH_INTERVAL_MS 15000
+
+#define PROVISION_HTTP_PORT 80
+#define DEFAULT_BACKEND_URL "http://10.0.0.1:5080"
+
+#define SENSOR_CODE_TEMP_SUFFIX "-temp"
+#define SENSOR_CODE_PH_SUFFIX "-ph"
+#define SENSOR_CODE_TDS_SUFFIX "-tds"

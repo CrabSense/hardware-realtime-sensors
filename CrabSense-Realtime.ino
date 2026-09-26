@@ -19,11 +19,23 @@ void printReading(const SensorData& data)
     Serial.println(" C");
 
     Serial.print("pH: ");
-    Serial.println(data.ph, 2);
+    Serial.print(data.ph, 2);
+    Serial.print("  (");
+    Serial.print(data.phMilliVolts, 0);
+    Serial.println(" mV)");
 
-    Serial.print("TDS: ");
-    Serial.print(data.tds, 0);
-    Serial.println(" ppm");
+    Serial.print("Salinity: ");
+    Serial.print(data.tdsPpt, 2);
+    Serial.print(" ppt  (EC ");
+    Serial.print(data.ecMs, 2);
+    Serial.print(" mS/cm, ");
+    Serial.print(data.tdsMilliVolts, 0);
+    Serial.print(" mV)");
+    if (data.salinitySaturated)
+    {
+        Serial.print("  SAT — can TDS/ADC, can probe EC K=10");
+    }
+    Serial.println();
 
     Serial.println("-------------------------");
     Serial.println();

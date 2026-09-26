@@ -7,7 +7,12 @@
 struct SensorData {
     float temperature;
     float ph;
-    float tds;
+    float tdsPpm;
+    float tdsPpt;
+    float phMilliVolts;
+    float tdsMilliVolts;
+    float ecMs;
+    bool salinitySaturated;
 };
 
 class SensorManager {

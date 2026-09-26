@@ -20,6 +20,13 @@ public:
 
     void saveBackendUrl(const String& backendUrl);
 
+    /// Thử Wi-Fi mới. Fail thì giữ SSID/password cũ.
+    bool applyCredentials(
+        const String& newSsid,
+        const String& newPassword,
+        const String& newBackendUrl = ""
+    );
+
     void clearCredentials();
 
     String getDeviceId();
@@ -27,6 +34,8 @@ public:
     String getMacAddress();
     String getBackendUrl();
     String getDeviceCode();
+    String getSsid();
+    String getLastError();
 
 private:
     Preferences preferences;
@@ -34,7 +43,9 @@ private:
     String ssid;
     String password;
     String backendUrl;
+    String lastError;
     bool provisioningMode = false;
 
     void startProvisioningAP();
+    bool waitForConnection(uint32_t timeoutMs);
 };

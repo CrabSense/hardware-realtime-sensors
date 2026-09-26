@@ -92,7 +92,7 @@ void ApiService::publish(const SensorData& data)
 
     add(SENSOR_CODE_TEMP_SUFFIX, data.temperature, "C");
     add(SENSOR_CODE_PH_SUFFIX, data.ph, "pH");
-    add(SENSOR_CODE_TDS_SUFFIX, data.tds, "ppm");
+    add(SENSOR_CODE_TDS_SUFFIX, data.tdsPpt, "ppt");
 
     String payload;
     serializeJson(doc, payload);

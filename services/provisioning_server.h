@@ -12,11 +12,17 @@ public:
 private:
     WebServer server;
     WifiManager* wifi = nullptr;
+    bool applyPending = false;
+    unsigned long applyAt = 0;
     bool restartPending = false;
     unsigned long restartAt = 0;
+    String pendingSsid;
+    String pendingPassword;
+    String pendingBackend;
 
     void sendCors();
     void handleInfo();
     void handleProvision();
+    void handleRestart();
     void handleNotFound();
 };

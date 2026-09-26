@@ -9,7 +9,9 @@
 #define MAX31865_MISO  13
 
 // =======================
-// DFRobot Analog Sensors
+// Analog: pH + độ mặn (EC)
+// GPIO5: DFR0300 / DFR0300-H analog EC — không dùng SEN0244 TDS nước ngọt.
 // =======================
 #define PH_PIN          4
-#define TDS_PIN         5
+#define SALINITY_PIN    5
+#define TDS_PIN         SALINITY_PIN

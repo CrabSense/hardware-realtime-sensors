@@ -1,4 +1,5 @@
 #include "tds_sensor.h"
+#include "../config/settings.h"
 
 TDSSensor::TDSSensor(uint8_t pin) {
     _pin = pin;
@@ -6,6 +7,7 @@ TDSSensor::TDSSensor(uint8_t pin) {
 
 void TDSSensor::begin() {
     pinMode(_pin, INPUT);
+    analogSetPinAttenuation(_pin, ADC_11db);
 }
 
 float TDSSensor::readVoltage() {
@@ -17,25 +19,29 @@ float TDSSensor::readVoltage() {
         delay(10);
     }
 
-    return (totalMv / (float)samples) / 1000.0;
+    _lastMv = totalMv / (float)samples;
+    return _lastMv / 1000.0f;
 }
 
-float TDSSensor::readTDS(float temperature) {
+bool TDSSensor::isSaturated() const {
+    return _lastMv >= EC_SAT_MV;
+}
 
-    float voltage = readVoltage();
+float TDSSensor::readEcMs(float temperature) {
+    readVoltage();
 
-    // Temperature compensation
-    float compensationCoefficient =
-        1.0 + 0.02 * (temperature - 25.0);
+    float t = temperature;
+    if (t < 0.0f || t > 40.0f)
+    {
+        t = 25.0f;
+    }
 
-    float compensationVoltage =
-        voltage / compensationCoefficient;
+    // DFRobot_EC: voltage is millivolts.
+    float rawEc = 1000.0f * _lastMv / EC_RES2 / EC_REF * EC_KVALUE;
+    float ec = rawEc * EC_KVALUE;
+    return ec / (1.0f + 0.0185f * (t - 25.0f));
+}
 
-    float tds =
-        (133.42 * compensationVoltage * compensationVoltage * compensationVoltage
-        - 255.86 * compensationVoltage * compensationVoltage
-        + 857.39 * compensationVoltage)
-        * 0.5;
-
-    return tds;
+float TDSSensor::readSalinityPpt(float temperature) {
+    return readEcMs(temperature) * EC_TO_PPT;
 }

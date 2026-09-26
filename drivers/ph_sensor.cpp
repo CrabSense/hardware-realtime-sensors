@@ -1,4 +1,5 @@
 #include "ph_sensor.h"
+#include "../config/settings.h"
 
 PHSensor::PHSensor(uint8_t pin) {
     _pin = pin;
@@ -6,9 +7,10 @@ PHSensor::PHSensor(uint8_t pin) {
 
 void PHSensor::begin() {
     pinMode(_pin, INPUT);
+    analogSetPinAttenuation(_pin, ADC_11db);
 }
 
-float PHSensor::readVoltage() {
+float PHSensor::readMilliVolts() {
     const int samples = 20;
     uint32_t totalMv = 0;
 
@@ -17,15 +19,15 @@ float PHSensor::readVoltage() {
         delay(10);
     }
 
-    return (totalMv / (float)samples) / 1000.0;
+    _lastMv = totalMv / (float)samples;
+    return _lastMv;
+}
+
+float PHSensor::readVoltage() {
+    return readMilliVolts() / 1000.0f;
 }
 
 float PHSensor::readPH() {
-    float voltage = readVoltage();
-
-    // TẠM THỜI.
-    // Sau đó chúng ta sẽ thay bằng hệ số calibration pH 4 / pH 7.
-    float ph = 7.0 + ((1.50 - voltage) / 0.18);
-
-    return ph;
+    const float voltageMv = readMilliVolts();
+    return PH_CAL_PH + (PH_CAL_MV - voltageMv) / PH_MV_PER_PH;
 }
